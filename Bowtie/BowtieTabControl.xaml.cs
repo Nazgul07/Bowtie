@@ -19,7 +19,6 @@ namespace Bowtie
 		public BowtieTabControl()
 		{
 			InitializeComponent();
-			//add a tab
 			AddNewTab();
 		}
 
@@ -67,7 +66,10 @@ namespace Bowtie
 		{
 			BowtieTabItem tab = new BowtieTabItem(app);
 			tab.Header = "tab " + (_tabCount++ + 1);
+			
+			
 			Items.Add(tab);
+			//(tab.FindName("TabIcon") as System.Windows.Controls.Image).Source = new BitmapImage(new Uri("pack://application:,,,/Resources/cmd.ico"));
 			this.SelectedIndex = this.Items.IndexOf(tab);
 			tab.Focus();
 		}
@@ -89,23 +91,18 @@ namespace Bowtie
 				if (item != SelectedItem)
 					item.Hide();
 			}
+			(SelectedItem as BowtieTabItem).TabItem_GotFocus(sender, null);
 		}
 
 		private void BowtieTabAddButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			StreamWriter sw = new StreamWriter("test.ico");
-			Icon.ExtractAssociatedIcon("C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe").Save(sw.BaseStream);
-			sw.Close();
-			var image = new System.Windows.Controls.Image();
-			//image.Source = new Bitmap(Properties.Resources.PS);
 			ContextMenu menu = new ContextMenu();
 			MenuItem cmdItem = new MenuItem()
 			{ 
 				Header = "Command Prompt",
 				Icon = new System.Windows.Controls.Image
 				{
-					Source = new BitmapImage(
-					new Uri("pack://application:,,,/Resources/cmd.ico"))
+					Source = new BitmapImage(new Uri("pack://application:,,,/Resources/cmd.ico"))
 				}
 			};
 			cmdItem.Click += (object o, RoutedEventArgs args) => AddNewTab();
@@ -119,8 +116,7 @@ namespace Bowtie
 					Header = "PowerShell",
 					Icon = new System.Windows.Controls.Image
 					{
-						Source = new BitmapImage(
-						new Uri("pack://application:,,,/Resources/PS.ico"))
+						Source = new BitmapImage(new Uri("pack://application:,,,/Resources/PS.ico"))
 					}
 				};
 				psItem.Click += (object o, RoutedEventArgs args) => AddNewTab("powershell.exe");

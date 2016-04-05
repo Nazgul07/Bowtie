@@ -15,6 +15,10 @@ namespace Bowtie
 			{
 				this.MaxWidth = 650;
 			}
+			else
+			{
+				this.MaxWidth = SystemParameters.PrimaryScreenWidth;
+			}
 		}
 		
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

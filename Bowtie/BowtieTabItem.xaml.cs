@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -31,27 +32,35 @@ namespace Bowtie
 		[DllImport("user32.dll", SetLastError = true)]
 		private static extern bool MoveWindow(IntPtr hwnd, int x, int y, int cx, int cy, bool repaint);
 
-		private string _executable;
+		public static readonly DependencyProperty ExecutableProperty =	DependencyProperty.Register("Executable", typeof(String), typeof(BowtieTabItem));
+		
+		public string Executable
+		{
+			get { return (string)GetValue(ExecutableProperty); }
+			set { SetValue(ExecutableProperty, value); }
+		}
 		public Process _process;
 
 		private IntPtr _processHandle = IntPtr.Zero;
 
 		private bool _loaded;
 
-		protected void OnVisibleChanged(object s, RoutedEventArgs e)
+		protected void OnLoaded(object s, RoutedEventArgs e)
 		{
 			if (!_loaded)
 			{
 				_loaded = true;
 				_process = Process.Start(new ProcessStartInfo
 				{
-					FileName = _executable,
+					FileName = Executable,
 					UseShellExecute = false,
 					WorkingDirectory = Environment.CurrentDirectory,
 					LoadUserProfile = true
 				});
-
-				Thread.Sleep(40);
+				while (_process.MainWindowHandle == IntPtr.Zero)
+				{
+					Thread.Sleep(10);
+				}
 				_processHandle = _process.MainWindowHandle;
 				var helper = new WindowInteropHelper(Window.GetWindow(this.ConsoleHost));
 				SetParent(_processHandle, helper.Handle);
@@ -64,9 +73,9 @@ namespace Bowtie
 		{
 			InitializeComponent();
 			this.SizeChanged += new SizeChangedEventHandler(OnSizeChanged);
-			this.Loaded += new RoutedEventHandler(OnVisibleChanged);
+			this.Loaded += new RoutedEventHandler(OnLoaded);
 			this.SizeChanged += new SizeChangedEventHandler(OnResize);
-			_executable = app;
+			Executable = app;
 		}
 
 		internal void Hide()
@@ -105,7 +114,7 @@ namespace Bowtie
 			_process.Dispose();
 		}
 
-		private void TabItem_GotFocus(object sender, RoutedEventArgs e)
+		internal void TabItem_GotFocus(object sender, RoutedEventArgs e)
 		{
 			Show();
 			this.InvalidateVisual();
