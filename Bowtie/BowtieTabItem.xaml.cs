@@ -31,7 +31,7 @@ namespace Bowtie
 		[DllImport("user32.dll", SetLastError = true)]
 		private static extern bool MoveWindow(IntPtr hwnd, int x, int y, int cx, int cy, bool repaint);
 
-
+		private string _executable;
 		public Process _process;
 
 		private IntPtr _processHandle = IntPtr.Zero;
@@ -45,7 +45,7 @@ namespace Bowtie
 				_loaded = true;
 				_process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "cmd.exe",
+					FileName = _executable,
 					UseShellExecute = false,
 					WorkingDirectory = Environment.CurrentDirectory,
 					LoadUserProfile = true
@@ -60,12 +60,13 @@ namespace Bowtie
 				ConsoleHost.Focus();
 			}
 		}
-		public BowtieTabItem()
+		public BowtieTabItem(string app)
 		{
 			InitializeComponent();
 			this.SizeChanged += new SizeChangedEventHandler(OnSizeChanged);
 			this.Loaded += new RoutedEventHandler(OnVisibleChanged);
 			this.SizeChanged += new SizeChangedEventHandler(OnResize);
+			_executable = app;
 		}
 
 		internal void Hide()
@@ -107,6 +108,7 @@ namespace Bowtie
 		private void TabItem_GotFocus(object sender, RoutedEventArgs e)
 		{
 			Show();
+			this.InvalidateVisual();
 			ConsoleHost.UpdateLayout();
 			OnResize(sender, null);
 		}

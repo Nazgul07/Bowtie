@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Bowtie
 {
@@ -10,42 +11,12 @@ namespace Bowtie
 		public MainWindow()
 		{
 			InitializeComponent();
+			if(Environment.OSVersion.Version.Major <= 6 && Environment.OSVersion.Version.Minor < 2)//windows 7 has this width limitation
+			{
+				this.MaxWidth = 650;
+			}
 		}
-
-		//private void Border_LeftMouseDown(object sender, MouseButtonEventArgs e)
-		//{
-		//	if (e.ClickCount == 2)
-		//	{
-		//		Maximize_Click(sender, e);
-		//	}
-		//	else if (e.ChangedButton == MouseButton.Left)
-		//	{ 
-		//		this.DragMove();
-		//	}
-		//}
-
-		//private void Close_Click(object sender, RoutedEventArgs e)
-		//{
-		//	SystemCommands.CloseWindow(this);
-		//}
-
-		//private void Maximize_Click(object sender, RoutedEventArgs e)
-		//{
-		//	if (this.WindowState == WindowState.Maximized)
-		//	{
-		//		SystemCommands.RestoreWindow(this);
-		//	}
-		//	else
-		//	{
-		//		SystemCommands.MaximizeWindow(this);
-		//	}
-		//}
-
-		//private void Minimize_Click(object sender, RoutedEventArgs e)
-		//{
-		//	SystemCommands.MinimizeWindow(this);
-		//}
-
+		
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			foreach(BowtieTabItem tab in ParentTabControl.Items)
