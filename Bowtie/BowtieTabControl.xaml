@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Bowtie" Background="#FF212229" BorderThickness="0" SelectionChanged="TabControl_SelectionChanged">
+	
 	<TabControl.Template>
 		<ControlTemplate TargetType="TabControl">
 			<Grid>
@@ -13,6 +14,7 @@
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="30"/>
 					<ColumnDefinition Width="31"/>
 				</Grid.ColumnDefinitions>
 				<ScrollViewer HorizontalScrollBarVisibility="Hidden"  VerticalScrollBarVisibility="Hidden">
@@ -24,15 +26,17 @@
                           Margin="2,2,2,0"
                           IsItemsHost="true"/>
 				</ScrollViewer>
-				<local:BowtieTabAddButton Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Click="BowtieTabAddButton_Click" MouseRightButtonDown="BowtieTabAddButton_MouseRightButtonDown" />
+				<local:BowtieAppDropdown x:Name="ApplicationCombo" Grid.Row="0" Grid.Column="1" Width="20" Height="20"></local:BowtieAppDropdown>
+				<local:BowtieTabAddButton Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" Click="BowtieTabAddButton_Click"/>
 				<ContentPresenter x:Name="PART_SelectedContentHost"
                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                       Margin="{TemplateBinding Padding}"
-                                      ContentSource="SelectedContent" Grid.Row="1" Grid.ColumnSpan="2"/>
+                                      ContentSource="SelectedContent" Grid.Row="1" Grid.ColumnSpan="3"/>
 			</Grid>
 		</ControlTemplate>
 	</TabControl.Template>
 	<TabControl.Resources>
+		
 		<Style TargetType="{x:Type local:BowtieTabItem}">
 			<Setter Property="AllowDrop" Value="True"/>
 			<EventSetter Event="PreviewMouseMove" Handler="TabItem_PreviewMouseMove"/>
@@ -46,7 +50,7 @@
 							<Border Name="Tab" CornerRadius="3,3,0,0"  Height="30" Background="#FF515464" Width="75" AllowDrop="False" BorderBrush="Black" BorderThickness=".5">
 								<Grid>
 									<Border Name="Highlight" Background="#FF515464" Width="2"  HorizontalAlignment="Left" Margin="1,1,0,0" CornerRadius="3,0,0,0"/>
-									<Image Name="TabIcon" Height="15" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+									<Image Name="TabIcon" MaxHeight="15" HorizontalAlignment="Left" Margin="5,0,0,0"/>
 									<Ellipse Name="CloseButton" Margin="0,0,2,7" HorizontalAlignment="Right" Width="13" Height="13" Fill="Transparent" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown" />
 									<Path Name="CloseX" Margin="0,0,2,7" HorizontalAlignment="Right" Width="12" Height="12" Stretch="Fill" Stroke="Gray" StrokeThickness="3" Data="M0,0 L1,1 M0,1 L1,0" MouseLeftButtonDown="CloseButton_MouseLeftButtonDown"/>
 								</Grid>
@@ -82,5 +86,38 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+		<Style TargetType="ComboBoxItem">
+			<Setter Property="Content">
+				<Setter.Value>
+					<StackPanel>
+						<Image  />
+					</StackPanel>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ComboBoxItem">
+						<StackPanel Orientation="Horizontal" Name="Item" >
+							<ContentPresenter x:Name="ImageSite" MaxWidth="20" Margin="5,0,5,0"
+							  HorizontalAlignment="Center" VerticalAlignment="Center"
+                              ContentSource="Content" 
+                              RecognizesAccessKey="True">
+							</ContentPresenter>
+							<ContentPresenter x:Name="LabelSite" Margin="5,0,5,0"
+                              ContentSource="Tag" 
+                              RecognizesAccessKey="True">
+							</ContentPresenter>
+						</StackPanel>
+						<ControlTemplate.Triggers>
+							<Trigger SourceName="Item" Property="IsMouseOver" Value="True">
+								<Setter TargetName="Item" Property="Background" Value="{x:Static SystemColors.HighlightBrush}" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+
+		</Style>
 	</TabControl.Resources>
+	
 </TabControl>

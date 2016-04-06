@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -120,6 +119,11 @@ namespace Bowtie
 			this.InvalidateVisual();
 			ConsoleHost.UpdateLayout();
 			OnResize(sender, null);
+
+			//give back focus to the tab instead of the console so you can use arrow keys to navigate tabs
+			this.GotFocus -= TabItem_GotFocus;
+			this.Focus();
+			this.GotFocus += TabItem_GotFocus;
 		}
 		
 	}

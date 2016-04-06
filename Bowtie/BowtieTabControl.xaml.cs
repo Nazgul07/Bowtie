@@ -59,17 +59,14 @@ namespace Bowtie
 		
 		private void BowtieTabAddButton_Click(object sender, RoutedEventArgs e)
 		{
-			AddNewTab();
+			AddNewTab((this.Template.FindName("ApplicationCombo", this) as BowtieAppDropdown).SelectedApplication);
 		}
 
 		private void AddNewTab(string app = "cmd.exe")
 		{
 			BowtieTabItem tab = new BowtieTabItem(app);
 			tab.Header = "tab " + (_tabCount++ + 1);
-			
-			
 			Items.Add(tab);
-			//(tab.FindName("TabIcon") as System.Windows.Controls.Image).Source = new BitmapImage(new Uri("pack://application:,,,/Resources/cmd.ico"));
 			this.SelectedIndex = this.Items.IndexOf(tab);
 			tab.Focus();
 		}
@@ -91,41 +88,10 @@ namespace Bowtie
 				if (item != SelectedItem)
 					item.Hide();
 			}
-			(SelectedItem as BowtieTabItem).TabItem_GotFocus(sender, null);
+			if(SelectedItem != null)
+				(SelectedItem as BowtieTabItem).TabItem_GotFocus(sender, null);
 		}
-
-		private void BowtieTabAddButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-		{
-			ContextMenu menu = new ContextMenu();
-			MenuItem cmdItem = new MenuItem()
-			{ 
-				Header = "Command Prompt",
-				Icon = new System.Windows.Controls.Image
-				{
-					Source = new BitmapImage(new Uri("pack://application:,,,/Resources/cmd.ico"))
-				}
-			};
-			cmdItem.Click += (object o, RoutedEventArgs args) => AddNewTab();
-			menu.Items.Add(cmdItem);
-
-			string regval = Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PowerShell\1", "Install", null).ToString();
-			if (regval.Equals("1"))
-			{
-				MenuItem psItem = new MenuItem()
-				{
-					Header = "PowerShell",
-					Icon = new System.Windows.Controls.Image
-					{
-						Source = new BitmapImage(new Uri("pack://application:,,,/Resources/PS.ico"))
-					}
-				};
-				psItem.Click += (object o, RoutedEventArgs args) => AddNewTab("powershell.exe");
-				menu.Items.Add(psItem);
-			}
-			var button = (sender as BowtieTabAddButton);
-			button.ContextMenu = menu;
-		}
-
+		
 		public static string GetFullPath(string fileName)
 		{
 			if (File.Exists(fileName))
