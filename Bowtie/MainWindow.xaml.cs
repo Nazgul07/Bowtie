@@ -34,7 +34,7 @@ namespace Bowtie
 				this.MaxWidth = SystemParameters.PrimaryScreenWidth;
 			}
 		}
-		
+
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			foreach(BowtieTabItem tab in ParentTabControl.Items)

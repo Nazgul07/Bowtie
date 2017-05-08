@@ -64,8 +64,10 @@ namespace Bowtie
 
 		private void AddNewTab(string app = "cmd.exe")
 		{
-			BowtieTabItem tab = new BowtieTabItem(app);
-			tab.Header = "tab " + (_tabCount++ + 1);
+			BowtieTabItem tab = new BowtieTabItem(app)
+			{
+				Header = "tab " + (_tabCount++ + 1)
+			};
 			Items.Add(tab);
 			this.SelectedIndex = this.Items.IndexOf(tab);
 			tab.Focus();
@@ -73,7 +75,7 @@ namespace Bowtie
 
 		private void CloseButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
 		{
-			var grid = VisualTreeHelper.GetParent(sender as System.Windows.Shapes.Path);
+			var grid = VisualTreeHelper.GetParent(sender as System.Windows.Shapes.Shape);
 			var border = VisualTreeHelper.GetParent(grid);
 			grid = VisualTreeHelper.GetParent(border);
 			BowtieTabItem tab = VisualTreeHelper.GetParent(grid) as BowtieTabItem;
